@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <joint name="laser_joint" type="fixed">
+    <parent link="Leishen_C16_Bottom_Connector_1"/>
+    <child link="laser_frame"/>
+    <origin xyz="0 0 0.03842" rpy="0 0 0"/>
+  </joint>
+
+  <link name="laser_frame"/>
+
+  <gazebo reference="laser_frame">
+    <material>Gazebo/Red</material>
+
+    <sensor name="sim_3d_lidar" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>500</samples>
+            <min_angle>-1.2</min_angle>
+            <max_angle>-1</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>16</samples>               <!-- Simulates 16 vertical beams -->
+            <min_angle>-0.2618</min_angle>      <!-- ~-15 degrees -->
+            <max_angle>0.2618</max_angle>       <!-- ~+15 degrees -->
+          </vertical>
+        </scan>
+        <range>
+          <min>0.3</min>
+          <max>30.0</max>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="lidar_points" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <argument>~/out:=/points</argument>
+        </ros>
+        <output_type>sensor_msgs/PointCloud2</output_type>
+        <frame_name>laser_frame</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>
